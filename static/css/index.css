@@ -1,0 +1,32 @@
+.bs-example {
+    margin: 0px;
+  }
+  
+  .navbar-brand {
+    font-size: 20px;
+    font-family: sans-serif;
+  }
+  
+  .col-lg-6 {
+    padding-left: 20%;
+  }
+  
+  .jumbotron {
+    margin-bottom: 0px;
+    background: #f8f9fa;
+  }
+  
+  .adjust-left {
+    margin-left: -20px; /* Adjust this value as needed */
+  }
+  
+  .btn-custom {
+    border-radius: 25px;
+    transition: all 0.3s;
+  }
+  
+  .btn-custom:hover {
+    background-color: #ff4757;
+    color: #fff;
+  }
+  
