@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
-from barcode import EAN13
+from barcode import Code39
 from barcode.writer import ImageWriter
 from io import BytesIO
 from django.core.files.base import ContentFile
@@ -65,9 +65,9 @@ class Book(models.Model):
 
         # Generate barcode if it doesn't already exist
         if not os.path.exists(file_path):
-            EAN = EAN13(str(self.isbn).zfill(12), writer=ImageWriter())
+            barcode = Code39(str(self.isbn), writer=ImageWriter(), add_checksum=False)
             buffer = BytesIO()
-            EAN.write(buffer)
+            barcode.write(buffer)
 
             # Save barcode image in memory
             self.barcode.save(file_name, ContentFile(buffer.getvalue()), save=False)
