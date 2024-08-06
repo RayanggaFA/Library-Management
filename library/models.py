@@ -38,7 +38,7 @@ class Book(models.Model):
         ('romance', 'Romance'),
         ('scifi', 'Sci-Fi')
     ]
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=250)
     isbn = models.PositiveIntegerField(unique=True)
     copies = models.PositiveBigIntegerField()
     author = models.CharField(max_length=40)
