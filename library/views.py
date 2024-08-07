@@ -96,8 +96,24 @@ def addbook_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def viewbook_view(request):
-    books=models.Book.objects.all()
-    return render(request,'library/viewbook.html',{'books':books})
+    books = models.Book.objects.all()
+    
+    # Get the items_per_page parameter from the query string
+    items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
+    try:
+        items_per_page = int(items_per_page)
+    except ValueError:
+        items_per_page = 10
+    
+    paginator = Paginator(books, items_per_page)  # Show `items_per_page` books per page
+    page_number = request.GET.get('page')
+    books_page = paginator.get_page(page_number)
+    
+    return render(request, 'library/viewbook.html', {
+        'books': books_page,
+        'items_per_page': items_per_page,
+    })
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
