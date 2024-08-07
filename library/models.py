@@ -10,11 +10,11 @@ import os
 
 class StudentExtra(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    enrollment = models.CharField(max_length=40)
-    branch = models.CharField(max_length=40)
+    Kelas = models.CharField(max_length=40)
+    # branch = models.CharField(max_length=40)
 
     def __str__(self):
-        return self.user.first_name + '[' + str(self.enrollment) + ']'
+        return self.user.first_name + '[' + str(self.Kelas) + ']'
 
     @property
     def get_name(self):
@@ -78,13 +78,13 @@ def get_expiry():
 
 
 class IssuedBook(models.Model):
-    enrollment = models.CharField(max_length=30)
+    Kelas = models.CharField(max_length=30)
     isbn = models.CharField(max_length=30)
     issuedate = models.DateField(auto_now=True)
     expirydate = models.DateField(default=get_expiry)
 
     def __str__(self):
-        return self.enrollment
+        return self.Kelas
     
     def end_issue_early(self):
         self.expirydate = datetime.today().date()

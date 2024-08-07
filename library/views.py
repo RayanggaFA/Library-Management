@@ -97,17 +97,17 @@ def viewbook_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def issuebook_view(request):
-    form=forms.IssuedBookForm()
-    if request.method=='POST':
-        #now this form have data from html
-        form=forms.IssuedBookForm(request.POST)
+    form = forms.IssuedBookForm()
+    if request.method == 'POST':
+        form = forms.IssuedBookForm(request.POST)
         if form.is_valid():
-            obj=models.IssuedBook()
-            obj.enrollment=request.POST.get('enrollment2')
-            obj.isbn=request.POST.get('isbn2')
+            obj = models.IssuedBook()
+            obj.Kelas = form.cleaned_data['kelas2'].Kelas  # Ensure correct attribute
+            obj.isbn = form.cleaned_data['isbn2']
             obj.save()
-            return render(request,'library/bookissued.html')
-    return render(request,'library/issuebook.html',{'form':form})
+            return render(request, 'library/bookissued.html')
+    return render(request, 'library/issuebook.html', {'form': form})
+
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
@@ -130,12 +130,12 @@ def viewissuedbook_view(request):
         fine = (days - 15) * 10 if days > 15 else 0
 
         books = list(models.Book.objects.filter(isbn=ib.isbn))
-        students = list(models.StudentExtra.objects.filter(enrollment=ib.enrollment))
+        students = list(models.StudentExtra.objects.filter(Kelas=ib.Kelas))
 
         for i in range(min(len(books), len(students))):
             t = (
                 students[i].get_name,
-                students[i].enrollment,
+                students[i].Kelas,
                 books[i].name,
                 books[i].author,
                 issdate,
@@ -147,6 +147,7 @@ def viewissuedbook_view(request):
 
     return render(request, 'library/viewissuedbook.html', {'li': li})
 
+
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def viewstudent_view(request):
@@ -157,21 +158,19 @@ def viewstudent_view(request):
 @login_required(login_url='studentlogin')
 def viewissuedbookbystudent(request):
     student=models.StudentExtra.objects.filter(user_id=request.user.id)
-    issuedbook=models.IssuedBook.objects.filter(enrollment=student[0].enrollment)
+    issuedbook=models.IssuedBook.objects.filter(Kelas=student[0].Kelas)
 
     li1=[]
-
     li2=[]
     for ib in issuedbook:
         books=models.Book.objects.filter(isbn=ib.isbn)
         for book in books:
-            t=(request.user,student[0].enrollment,student[0].branch,book.name,book.author)
+            t=(request.user,student[0].Kelas,student[0].branch,book.name,book.author)
             li1.append(t)
         issdate=str(ib.issuedate.day)+'-'+str(ib.issuedate.month)+'-'+str(ib.issuedate.year)
         expdate=str(ib.expirydate.day)+'-'+str(ib.expirydate.month)+'-'+str(ib.expirydate.year)
         #fine calculation
         days=(date.today()-ib.issuedate)
-        print(date.today())
         d=days.days
         fine=0
         if d>15:
@@ -181,6 +180,7 @@ def viewissuedbookbystudent(request):
         li2.append(t)
 
     return render(request,'library/viewissuedbookbystudent.html',{'li1':li1,'li2':li2})
+
 
 def aboutus_view(request):
     return render(request,'library/aboutus.html')

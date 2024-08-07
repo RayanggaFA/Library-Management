@@ -25,7 +25,7 @@ class StudentUserForm(forms.ModelForm):
 class StudentExtraForm(forms.ModelForm):
     class Meta:
         model=models.StudentExtra
-        fields=['enrollment','branch']
+        fields=['Kelas',]
 
 class BookForm(forms.ModelForm):
     class Meta:
@@ -34,5 +34,6 @@ class BookForm(forms.ModelForm):
 
 class IssuedBookForm(forms.Form):
     isbn2 = forms.CharField(max_length=13, label='ISBN')
-    enrollment2 = forms.ModelChoiceField(queryset=models.StudentExtra.objects.all(), empty_label="Name and enrollment", to_field_name='enrollment', label='Name and enrollment')
-    
+    kelas2 = forms.ModelChoiceField(queryset=models.StudentExtra.objects.all(), empty_label="Name and Kelas", to_field_name='Kelas', label='Name and Kelas')
+
+
