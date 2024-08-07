@@ -51,6 +51,7 @@ urlpatterns = [
     path('contactus', views.contactus_view),
 
     path('endissueearly/<int:pk>/', views.end_issue_early_view, name='end_issue_early'),
+    path('issuebook/', views.issuebook_view, name='issuebook'),
 ]
 
 if settings.DEBUG:

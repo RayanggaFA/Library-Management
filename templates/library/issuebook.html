@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-
     <style type="text/css">
         body {
             color: #aa082e;
@@ -85,25 +84,37 @@
 </head>
 <body style="background-color:#b6bde7;">
     {% include "library/navbaradmin.html" %}
-    <br> <br>
+    <br><br>
     
     <div class="signup-form">
         <form method="post" class="form-horizontal">
             <center><h2>ISSUE BOOK TO STUDENT</h2></center>
             {% csrf_token %}
-            {% for field in form %}
             <div class="form-group">
-                <label class="control-label col-xs-4">{{ field.label_tag }}</label>
+                <label class="control-label col-xs-4">Kelas</label>
                 <div class="col-xs-8">
-                    {{ field }}
+                    <select id="kelas-select" name="kelas2" class="form-control">
+                        <option value="">Select Kelas</option>
+                        {% for kelas in kelas_list %}
+                            <option value="{{ kelas }}">{{ kelas }}</option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
-            {% endfor %}
-            {% if error_message %}
-            <div class="alert alert-danger" role="alert">
-                {{ error_message }}
+            <div class="form-group">
+                <label class="control-label col-xs-4">Name</label>
+                <div class="col-xs-8">
+                    <select id="name-select" name="name" class="form-control">
+                        <option value="">Select Name</option>
+                    </select>
+                </div>
             </div>
-            {% endif %}
+            <div class="form-group">
+                <label class="control-label col-xs-4">{{ form.isbn2.label_tag }}</label>
+                <div class="col-xs-8">
+                    {{ form.isbn2 }}
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-xs-8 col-xs-offset-4">
                     <button type="submit" class="btn btn-success btn-lg" style="border-radius: 0%;">ISSUE</button>
@@ -113,5 +124,26 @@
         <div class="text-center">View Issued Book to Student <a href="viewissuedbook">Click here</a></div>
     </div>
     {% include "library/footer.html" %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#kelas-select').change(function() {
+                var kelas = $(this).val();
+                $.ajax({
+                    url: "{% url 'issuebook' %}",
+                    data: {
+                        'kelas': kelas
+                    },
+                    success: function(data) {
+                        $('#name-select').empty();
+                        $('#name-select').append('<option value="">Select Name</option>');
+                        $.each(data, function(index, item) {
+                            $('#name-select').append('<option value="' + item.id + '">' + item.user__first_name + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

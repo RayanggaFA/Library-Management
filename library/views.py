@@ -9,6 +9,10 @@ from datetime import datetime,timedelta,date
 from django.core.mail import send_mail
 from librarymanagement.settings import EMAIL_HOST_USER
 from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from .forms import IssuedBookForm
+from .models import StudentExtra, IssuedBook
 
 
 def home_view(request):
@@ -97,17 +101,24 @@ def viewbook_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def issuebook_view(request):
-    form = forms.IssuedBookForm()
     if request.method == 'POST':
-        form = forms.IssuedBookForm(request.POST)
+        form = IssuedBookForm(request.POST)
         if form.is_valid():
-            obj = models.IssuedBook()
-            obj.Kelas = form.cleaned_data['kelas2'].Kelas  # Ensure correct attribute
+            obj = IssuedBook()
+            obj.Kelas = form.cleaned_data['kelas2']
             obj.isbn = form.cleaned_data['isbn2']
             obj.save()
             return render(request, 'library/bookissued.html')
-    return render(request, 'library/issuebook.html', {'form': form})
+    else:
+        form = IssuedBookForm()
+    
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        kelas = request.GET.get('kelas')
+        students = StudentExtra.objects.filter(Kelas=kelas).values('id', 'user__first_name')
+        return JsonResponse(list(students), safe=False)
 
+    kelas_list = StudentExtra.objects.values_list('Kelas', flat=True).distinct()
+    return render(request, 'library/issuebook.html', {'form': form, 'kelas_list': kelas_list})
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)

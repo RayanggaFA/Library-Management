@@ -34,6 +34,11 @@ class BookForm(forms.ModelForm):
 
 class IssuedBookForm(forms.Form):
     isbn2 = forms.CharField(max_length=13, label='ISBN')
-    kelas2 = forms.ModelChoiceField(queryset=models.StudentExtra.objects.all(), empty_label="Name and Kelas", to_field_name='Kelas', label='Name and Kelas')
+    kelas2 = forms.ChoiceField(choices=[], label='Kelas')
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        kelas_choices = [(kelas, kelas) for kelas in models.StudentExtra.objects.values_list('Kelas', flat=True).distinct()]
+        self.fields['kelas2'].choices = [('', 'Select Kelas')] + kelas_choices
 
 
