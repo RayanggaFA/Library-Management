@@ -13,6 +13,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .forms import IssuedBookForm
 from .models import StudentExtra, IssuedBook
+from django.core.paginator import Paginator
 
 
 def home_view(request):
@@ -163,8 +164,23 @@ def viewissuedbook_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def viewstudent_view(request):
-    students=models.StudentExtra.objects.all()
-    return render(request,'library/viewstudent.html',{'students':students})
+    students = models.StudentExtra.objects.all()
+    
+    # Get the items_per_page parameter from the query string
+    items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
+    try:
+        items_per_page = int(items_per_page)
+    except ValueError:
+        items_per_page = 10
+    
+    paginator = Paginator(students, items_per_page)  # Show `items_per_page` students per page
+    page_number = request.GET.get('page')
+    students_page = paginator.get_page(page_number)
+    
+    return render(request, 'library/viewstudent.html', {
+        'students': students_page,
+        'items_per_page': items_per_page,
+    })
 
 
 @login_required(login_url='studentlogin')

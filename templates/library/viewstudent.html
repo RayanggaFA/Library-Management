@@ -1,107 +1,121 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
+<head>
     <meta charset="utf-8">
-    <title></title>
-
+    <title>View Students</title>
     <style media="screen">
-    table.redTable {
-border: 2px solid #A40808;
-background-color: #EEE7DB;
-width: 100%;
-text-align: center;
-border-collapse: collapse;
-}
-table.redTable td, table.redTable th {
-border: 1px solid #AAAAAA;
-padding: 3px 2px;
-}
-table.redTable tbody td {
-font-size: 13px;
-}
-table.redTable tr:nth-child(even) {
-background: #F5C8BF;
-}
-table.redTable thead {
-background: #A40808;
-}
-table.redTable thead th {
-font-size: 19px;
-font-weight: bold;
-color: #FFFFFF;
-text-align: center;
-border-left: 2px solid #A40808;
-}
-table.redTable thead th:first-child {
-border-left: none;
-}
-
-table.redTable tfoot {
-font-size: 13px;
-font-weight: bold;
-color: #FFFFFF;
-background: #A40808;
-}
-table.redTable tfoot td {
-font-size: 13px;
-}
-table.redTable tfoot .links {
-text-align: right;
-}
-table.redTable tfoot .links a{
-display: inline-block;
-background: #FFFFFF;
-color: #A40808;
-padding: 2px 8px;
-border-radius: 5px;
-}
+        table.redTable {
+            border: 2px solid #A40808;
+            background-color: #EEE7DB;
+            width: 100%;
+            text-align: center;
+            border-collapse: collapse;
+        }
+        table.redTable td, table.redTable th {
+            border: 1px solid #AAAAAA;
+            padding: 3px 2px;
+        }
+        table.redTable tbody td {
+            font-size: 13px;
+        }
+        table.redTable tr:nth-child(even) {
+            background: #F5C8BF;
+        }
+        table.redTable thead {
+            background: #A40808;
+        }
+        table.redTable thead th {
+            font-size: 19px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-align: center;
+            border-left: 2px solid #A40808;
+        }
+        table.redTable thead th:first-child {
+            border-left: none;
+        }
+        table.redTable tfoot {
+            font-size: 13px;
+            font-weight: bold;
+            color: #FFFFFF;
+            background: #A40808;
+        }
+        table.redTable tfoot td {
+            font-size: 13px;
+        }
+        table.redTable tfoot .links {
+            text-align: right;
+        }
+        table.redTable tfoot .links a {
+            display: inline-block;
+            background: #FFFFFF;
+            color: #A40808;
+            padding: 2px 8px;
+            border-radius: 5px;
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
     {% include "library/navbaradmin.html" %}
     <br>
     <br>
-    <h3 class="p-3 mb-2 bg-success text-white" style = 'font-size: 30px;text-align:center;'>Registered Students</h3>
-
-    {% if students%}
-<div class="container">
-  <table class="table table-hover table-condensed table-striped table-bordered">
-    <thead>
-    <tr>
-    <th>Name</th>
-    <th>Enrollment</th>
-    <th>Branch</th>
-    </tr>
-    </thead>
-    <tfoot>
-    <tr>
-    <td colspan="3">
-    <div class="links"></div>
-    </td>
-    </tr>
-    </tfoot>
-    <tbody>
-      {% for s in students %}
-        <tr>
-          <td>{{s.get_name}}</td>
-          <td>{{s.enrollment}}</td>
-          <td>{{s.branch}}</td>
+    <h3 class="p-3 mb-2 bg-success text-white" style='font-size: 30px;text-align:center;'>Registered Students</h3>
     
-        </tr>
+    <form method="get">
+        <label for="items_per_page">Show</label>
+        <select name="items_per_page" id="items_per_page" onchange="this.form.submit()">
+            <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
+            <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
+            <option value="20" {% if items_per_page == 20 %}selected{% endif %}>20</option>
+            <option value="50" {% if items_per_page == 50 %}selected{% endif %}>50</option>
+        </select>
+        entries
+    </form>
     
-      {% endfor %}
-    </tbody>
-    </table>
-</div>
-{%else%}
-<h1> No Student Registered in Library</h1>
-{%endif%}
-
-
-
-<br><br><br><br><br><br>
-
-<br><br><br>
-  {% include "library/footer.html" %}
-  </body>
+    {% if students %}
+    <div class="container">
+        <table class="table table-hover table-condensed table-striped table-bordered redTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Kelas</th>
+                    <th>Branch</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                        <div class="links">
+                            {% if students.has_previous %}
+                                <a href="?page=1&items_per_page={{ items_per_page }}">First</a>
+                                <a href="?page={{ students.previous_page_number }}&items_per_page={{ items_per_page }}">Previous</a>
+                            {% endif %}
+                            <span>Page {{ students.number }} of {{ students.paginator.num_pages }}</span>
+                            {% if students.has_next %}
+                                <a href="?page={{ students.next_page_number }}&items_per_page={{ items_per_page }}">Next</a>
+                                <a href="?page={{ students.paginator.num_pages }}&items_per_page={{ items_per_page }}">Last</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for s in students %}
+                <tr>
+                    <td>{{ s.get_name }}</td>
+                    <td>{{ s.Kelas }}</td>
+                    <td>{{ s.branch }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <h1>No Student Registered in Library</h1>
+    {% endif %}
+    
+    <br><br><br><br><br><br>
+    <br><br><br>
+    {% include "library/footer.html" %}
+</body>
 </html>
