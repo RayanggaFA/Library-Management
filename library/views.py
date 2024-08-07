@@ -137,8 +137,9 @@ def viewissuedbook_view(request):
         issdate = f"{ib.issuedate.day}-{ib.issuedate.month}-{ib.issuedate.year}"
         expdate = f"{ib.expirydate.day}-{ib.expirydate.month}-{ib.expirydate.year}"
 
-        days = (date.today() - ib.issuedate).days
-        fine = (days - 15) * 10 if days > 15 else 0
+        # Calculate fine
+        days_overdue = (date.today() - ib.expirydate).days
+        fine = days_overdue * 2000 if days_overdue > 0 else 0
 
         books = list(models.Book.objects.filter(isbn=ib.isbn))
         students = list(models.StudentExtra.objects.filter(Kelas=ib.Kelas))
