@@ -27,16 +27,17 @@ class StudentExtra(models.Model):
 
 class Book(models.Model):
     catchoice = [
-        ('education', 'Education'),
-        ('entertainment', 'Entertainment'),
-        ('comics', 'Comics'),
-        ('biography', 'Biography'),
-        ('history', 'History'),
-        ('novel', 'Novel'),
-        ('fantasy', 'Fantasy'),
-        ('thriller', 'Thriller'),
-        ('romance', 'Romance'),
-        ('scifi', 'Sci-Fi')
+        ('karya umum', 'KARYA UMUM'),
+        ('Filsafat dan psikologi', 'FILSAFAT DAN PSIKOLOGI'),
+        ('Agama', 'AGAMA'),
+        ('Ilmu sosial', 'ILMU SOSIAL'),
+        ('Bahasa', 'BAHASA'),
+        ('Ilmu alam dan matematika', 'ILMU ALAM DAN MATEMATIKA'),
+        ('Teknologi dan ilmu terapan', 'TEKNOLOGI DAN ILMU TERAPAN'),
+        ('Kesenian hiburan dan olahraga', 'KESENIAN HIBURAN DAN OLAHRAGA'),
+        ('kesusastraan', 'KESUSASTRAAN'),
+        ('Geografi dan sejarah', 'GEOGRAFI DAN SEJARAH'),
+        ('Koleksi khusus', 'KOLEKSI KHUSUS')
     ]
     name = models.CharField(max_length=250)
     isbn = models.PositiveIntegerField(unique=True)
