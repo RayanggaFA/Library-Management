@@ -40,7 +40,7 @@ class Book(models.Model):
         ('Koleksi khusus', 'KOLEKSI KHUSUS')
     ]
     name = models.CharField(max_length=250)
-    isbn = models.PositiveIntegerField(unique=True)
+    isbn = models.CharField(unique=True, max_length=250)
     copies = models.PositiveBigIntegerField()
     author = models.CharField(max_length=40)
     category = models.CharField(max_length=30, choices=catchoice, default='education')
