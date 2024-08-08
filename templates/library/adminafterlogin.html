@@ -1,61 +1,30 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-<style media="screen">
-.btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  border-radius: 35px;
-  font-size: 24px;
-  line-height: 1.33;
-}
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="{% static 'css/adminAfterlogin.css' %}" rel="stylesheet">
+</head>
+<body>
+  {% include "library/navbaradmin.html" %}
 
-.btn-circle {
-  width: 30px;
-  height: 30px;
-  padding: 6px 0px;
-  border-radius: 15px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.42857;
-}
-
-.jumbotron{
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-.jumbotron h1{
-  text-align: center;
-}
-
-
-</style>
-  </head>
-  <body>
-    {% include "library/navbaradmin.html" %}
-  
-   
-    <div class="jumbotron" >
-    <h1 class="display-4">Hello {{user.first_name}} !</h1>
-    <p class="lead">As you are Admin, you can add a book to library, view available book in library,
-       Issue books to students,
-      View issued book to students and many more ... !
-
-    </p>
-    <hr class="my-4">
-    <p>Option Available For You</p>
-    <div class="options" style="text-align:center">
-      <a href="addbook" class="btn btn-primary btn-lg active" style="border-radius: 0%;" role="button" aria-pressed="true">Add Book To Library</a><br><br>
-      <a href="viewbook" class="btn btn-primary btn-lg active" style="border-radius: 0%;" role="button" aria-pressed="true">View Available Book</a><br><br>
-      <a href="issuebook" class="btn btn-primary btn-lg active" style="border-radius: 0%;" role="button" aria-pressed="true">Issue New Book</a><br><br>
-      <a href="viewissuedbook" class="btn btn-primary btn-lg active" style="border-radius: 0%;" role="button" aria-pressed="true">View Issued Book</a><br><br>
-      <a href="viewstudent" class="btn btn-primary btn-lg active" style="border-radius: 0%;" role="button" aria-pressed="true">View Student</a>
+  <div class="jumbotron">
+    <div class="background-animation"></div>
+    <h1 class="text-4xl font-bold mb-4">Hello {{user.first_name}}!</h1>
+    <p class="text-xl">As you are Admin, you can add a book to library, view available books in library, issue books to students, view issued books to students, and many more options!</p>
+    <hr class="my-4 border-white">
+    <p class="text-lg mb-4">Options Available For You</p>
+    <div class="options flex flex-col items-center">
+      <a href="addbook" class="btn-primary">Add Book To Library</a>
+      <a href="viewbook" class="btn-primary">View Available Books</a>
+      <a href="issuebook" class="btn-primary">Issue New Book</a>
+      <a href="viewissuedbook" class="btn-primary">View Issued Books</a>
+      <a href="viewstudent" class="btn-primary">View Student</a>
     </div>
+  </div>
 
-    </div>
+  {% include "library/footer.html" %}
 
-
-    {% include "library/footer.html" %}
-  </body>
+  <script src="{% static 'js/adminAfterlogin.js' %}"></script>
+</body>
 </html>
