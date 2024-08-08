@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from .forms import IssuedBookForm
 from .models import StudentExtra, IssuedBook
 from django.core.paginator import Paginator
-
+from django.db.models import Q
 
 def home_view(request):
     if request.user.is_authenticated:
@@ -98,6 +98,16 @@ def addbook_view(request):
 def viewbook_view(request):
     books = models.Book.objects.all()
     
+    # Get filter and search parameters from the query string
+    category = request.GET.get('category', '')
+    search_isbn = request.GET.get('search_isbn', '')
+    
+    # Filter books based on category and search_isbn
+    if category:
+        books = books.filter(category=category)
+    if search_isbn:
+        books = books.filter(isbn__icontains=search_isbn)
+    
     # Get the items_per_page parameter from the query string
     items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
     try:
@@ -109,9 +119,14 @@ def viewbook_view(request):
     page_number = request.GET.get('page')
     books_page = paginator.get_page(page_number)
     
+    categories = models.Book.catchoice
+    
     return render(request, 'library/viewbook.html', {
         'books': books_page,
         'items_per_page': items_per_page,
+        'category': category,
+        'search_isbn': search_isbn,
+        'categories': categories,
     })
 
 
@@ -182,7 +197,25 @@ def viewissuedbook_view(request):
 def viewstudent_view(request):
     students = models.StudentExtra.objects.all()
     
-    # Get the items_per_page parameter from the query string
+    # Search functionality
+    search_query = request.GET.get('search', '')
+    if search_query:
+        students = students.filter(
+            Q(user__first_name__icontains=search_query) | 
+            Q(user__last_name__icontains=search_query)
+        )
+    
+    # Filter by Kelas
+    kelas_filter = request.GET.get('kelas', '')
+    if kelas_filter:
+        students = students.filter(Kelas=kelas_filter)
+    
+    # Sort functionality
+    sort_by = request.GET.get('sort_by', 'Kelas')
+    if sort_by:
+        students = students.order_by(sort_by)
+    
+    # Pagination
     items_per_page = request.GET.get('items_per_page', 10)  # Default to 10 items per page
     try:
         items_per_page = int(items_per_page)
@@ -193,9 +226,16 @@ def viewstudent_view(request):
     page_number = request.GET.get('page')
     students_page = paginator.get_page(page_number)
     
+    # Get distinct Kelas values for the filter dropdown
+    kelas_list = models.StudentExtra.objects.values_list('Kelas', flat=True).distinct()
+    
     return render(request, 'library/viewstudent.html', {
         'students': students_page,
         'items_per_page': items_per_page,
+        'search_query': search_query,
+        'sort_by': sort_by,
+        'kelas_list': kelas_list,
+        'kelas_filter': kelas_filter,
     })
 
 

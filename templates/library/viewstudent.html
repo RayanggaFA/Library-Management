@@ -72,6 +72,38 @@
         entries
     </form>
     
+    <form method="get">
+        <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
+        <button type="submit">Search</button>
+        <input type="hidden" name="items_per_page" value="{{ items_per_page }}">
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+        <input type="hidden" name="kelas" value="{{ kelas_filter }}">
+    </form>
+    
+    <form method="get">
+        <label for="sort_by">Sort by</label>
+        <select name="sort_by" id="sort_by" onchange="this.form.submit()">
+            <option value="Kelas" {% if sort_by == 'Kelas' %}selected{% endif %}>Kelas</option>
+            <option value="user__first_name" {% if sort_by == 'user__first_name' %}selected{% endif %}>Name</option>
+        </select>
+        <input type="hidden" name="items_per_page" value="{{ items_per_page }}">
+        <input type="hidden" name="search" value="{{ search_query }}">
+        <input type="hidden" name="kelas" value="{{ kelas_filter }}">
+    </form>
+    
+    <form method="get">
+        <label for="kelas">Filter by Kelas</label>
+        <select name="kelas" id="kelas" onchange="this.form.submit()">
+            <option value="">All</option>
+            {% for kelas in kelas_list %}
+                <option value="{{ kelas }}" {% if kelas_filter == kelas %}selected{% endif %}>{{ kelas }}</option>
+            {% endfor %}
+        </select>
+        <input type="hidden" name="items_per_page" value="{{ items_per_page }}">
+        <input type="hidden" name="search" value="{{ search_query }}">
+        <input type="hidden" name="sort_by" value="{{ sort_by }}">
+    </form>
+    
     {% if students %}
     <div class="container">
         <table class="table table-hover table-condensed table-striped table-bordered redTable">
@@ -87,13 +119,13 @@
                     <td colspan="3">
                         <div class="links">
                             {% if students.has_previous %}
-                                <a href="?page=1&items_per_page={{ items_per_page }}">First</a>
-                                <a href="?page={{ students.previous_page_number }}&items_per_page={{ items_per_page }}">Previous</a>
+                                <a href="?page=1&items_per_page={{ items_per_page }}&sort_by={{ sort_by }}&search={{ search_query }}&kelas={{ kelas_filter }}">First</a>
+                                <a href="?page={{ students.previous_page_number }}&items_per_page={{ items_per_page }}&sort_by={{ sort_by }}&search={{ search_query }}&kelas={{ kelas_filter }}">Previous</a>
                             {% endif %}
                             <span>Page {{ students.number }} of {{ students.paginator.num_pages }}</span>
                             {% if students.has_next %}
-                                <a href="?page={{ students.next_page_number }}&items_per_page={{ items_per_page }}">Next</a>
-                                <a href="?page={{ students.paginator.num_pages }}&items_per_page={{ items_per_page }}">Last</a>
+                                <a href="?page={{ students.next_page_number }}&items_per_page={{ items_per_page }}&sort_by={{ sort_by }}&search={{ search_query }}&kelas={{ kelas_filter }}">Next</a>
+                                <a href="?page={{ students.paginator.num_pages }}&items_per_page={{ items_per_page }}&sort_by={{ sort_by }}&search={{ search_query }}&kelas={{ kelas_filter }}">Last</a>
                             {% endif %}
                         </div>
                     </td>

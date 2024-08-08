@@ -59,9 +59,20 @@
   <br>
   <h3 class="p-3 mb-2 bg-success text-white" style='font-size: 30px; text-align: center;'>Available Books in Library</h3>
   
-  <form method="get">
+  <form method="get" class="form-inline">
+    <label for="category">Category:</label>
+    <select name="category" id="category" class="form-control" onchange="this.form.submit()">
+      <option value="">All</option>
+      {% for key, value in categories %}
+        <option value="{{ key }}" {% if category == key %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select>
+
+    <label for="search_isbn">ISBN:</label>
+    <input type="text" name="search_isbn" id="search_isbn" value="{{ search_isbn }}" class="form-control" placeholder="Search ISBN" onchange="this.form.submit()">
+
     <label for="items_per_page">Show</label>
-    <select name="items_per_page" id="items_per_page" onchange="this.form.submit()">
+    <select name="items_per_page" id="items_per_page" class="form-control" onchange="this.form.submit()">
       <option value="5" {% if items_per_page == 5 %}selected{% endif %}>5</option>
       <option value="10" {% if items_per_page == 10 %}selected{% endif %}>10</option>
       <option value="20" {% if items_per_page == 20 %}selected{% endif %}>20</option>
@@ -88,13 +99,13 @@
           <td colspan="6">
             <div class="links">
               {% if books.has_previous %}
-                <a href="?page=1&items_per_page={{ items_per_page }}">First</a>
-                <a href="?page={{ books.previous_page_number }}&items_per_page={{ items_per_page }}">Previous</a>
+                <a href="?page=1&items_per_page={{ items_per_page }}&category={{ category }}&search_isbn={{ search_isbn }}">First</a>
+                <a href="?page={{ books.previous_page_number }}&items_per_page={{ items_per_page }}&category={{ category }}&search_isbn={{ search_isbn }}">Previous</a>
               {% endif %}
               <span>Page {{ books.number }} of {{ books.paginator.num_pages }}</span>
               {% if books.has_next %}
-                <a href="?page={{ books.next_page_number }}&items_per_page={{ items_per_page }}">Next</a>
-                <a href="?page={{ books.paginator.num_pages }}&items_per_page={{ items_per_page }}">Last</a>
+                <a href="?page={{ books.next_page_number }}&items_per_page={{ items_per_page }}&category={{ category }}&search_isbn={{ search_isbn }}">Next</a>
+                <a href="?page={{ books.paginator.num_pages }}&items_per_page={{ items_per_page }}&category={{ category }}&search_isbn={{ search_isbn }}">Last</a>
               {% endif %}
             </div>
           </td>
