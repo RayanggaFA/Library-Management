@@ -18,6 +18,7 @@
       border: 2px solid #607d8b;
       background-color: #EEE7DB;
       width: 100%;
+      table-layout: auto; /* Allow dynamic sizing */
       text-align: center;
       border-collapse: collapse;
     }
@@ -62,6 +63,14 @@
       color: #607d8b;
       padding: 2px 8px;
       border-radius: 5px;
+    }
+    .barcode-column {
+      min-width: 150px; /* Minimum width for barcode */
+      max-width: 200px; /* Maximum width for barcode */
+    }
+    .barcode-column img {
+      width: 100%; /* Ensure the barcode image takes full width */
+      height: auto; /* Maintain aspect ratio */
     }
   </style>
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
@@ -135,7 +144,7 @@
             <th>Author</th>
             <th>Copies</th>
             <th>Category</th>
-            <th>Barcode</th>
+            <th class="barcode-column">Barcode</th> <!-- Single barcode column -->
           </tr>
         </thead>
         <tfoot>
@@ -163,9 +172,9 @@
               <td>{{ book.author }}</td>
               <td>{{ book.copies }}</td>
               <td>{{ book.category }}</td>
-              <td>
+              <td class="barcode-column">
                 {% if book.barcode %}
-                  <img src="{{ book.barcode.url }}" alt="Barcode" style="width: 100px; height: auto;">
+                  <img src="{{ book.barcode.url }}" alt="Barcode">
                 {% else %}
                   No Barcode
                 {% endif %}
